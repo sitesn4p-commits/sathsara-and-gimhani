@@ -301,6 +301,99 @@
     70% { box-shadow: 0 0 0 15px rgba(183, 110, 121, 0); }
     100% { box-shadow: 0 0 0 0 rgba(183, 110, 121, 0); }
 }
+/* =========================================
+   Home Page Upgrades & Countdown Timer
+   ========================================= */
+.invite-line {
+    font-family: var(--font-headings);
+    font-size: 1.1rem;
+    color: var(--accent-rosegold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+h1 .ampersand {
+    font-size: 3.5rem;
+    color: var(--accent-rosegold);
+    font-family: var(--font-romantic);
+    line-height: 0.5;
+}
+
+.wedding-date {
+    font-family: var(--font-headings);
+    font-size: 1.6rem;
+    color: var(--primary-burgundy);
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0 40px 0;
+    flex-wrap: wrap;
+}
+
+.time-box {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(183, 110, 121, 0.3);
+    border-radius: 12px;
+    padding: 15px 20px;
+    min-width: 90px;
+    box-shadow: 0 8px 20px rgba(183, 110, 121, 0.1);
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s ease;
+}
+
+.time-box:hover {
+    transform: translateY(-5px);
+}
+
+.time-box span {
+    display: block;
+    font-family: var(--font-headings);
+    font-size: 2.2rem;
+    color: var(--primary-burgundy);
+    font-weight: 600;
+    line-height: 1;
+}
+
+.time-box p {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dark);
+    margin: 8px 0 0 0;
+    font-weight: 500;
+}
+
+.venue-hint {
+    font-family: var(--font-headings);
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--accent-rosegold);
+    margin-top: 20px;
+    line-height: 1.6;
+}
+
+/* --- Entry Animation Delays --- */
+/* This automatically works with the .reveal-element logic provided previously */
+.reveal-delay-1 { transition-delay: 0.2s; }
+.reveal-delay-2 { transition-delay: 0.4s; }
+.reveal-delay-3 { transition-delay: 0.6s; }
+.reveal-delay-4 { transition-delay: 0.8s; }
+.reveal-delay-5 { transition-delay: 1.0s; }
+
+/* Triggers the reveal specifically when the Home section becomes active */
+.section-page.active .reveal-element {
+    opacity: 1;
+    transform: translateY(0);
+}
     </style>
 </head>
 <body>
@@ -347,15 +440,25 @@
 
     <main>
         <section id="home" class="section-page active">
-            <h2>You are Joyfully Invited</h2>
-            
-            <div class="heart-wrapper">
-                <img src="romantic-watercolor-newly-married-couple-600nw-2714415865.webp" alt="Madusha and Gimhani" class="heart-img">
-            </div>
+    <p class="invite-line reveal-element">Together with their families</p>
+    
+    <div class="heart-wrapper reveal-element reveal-delay-1 animate-float">
+        <img src="romantic-watercolor-newly-married-couple-600nw-2714415865.webp" alt="Madusha and Gimhani" class="heart-img">
+    </div>
 
-            <h1>Madusha Sathsara<br>&<br>Gimhani Keshika</h1>
-            <p><strong>June 15, 2036</strong> <br> Save the Date</p>
-        </section>
+    <h1 class="reveal-element reveal-delay-2">Madusha Sathsara<br><span class="ampersand">&</span><br>Gimhani Keshika</h1>
+    
+    <p class="wedding-date reveal-element reveal-delay-3">Sunday, June 15, 2036</p>
+    
+    <div class="countdown-container reveal-element reveal-delay-4" id="countdown">
+        <div class="time-box"><span id="days">00</span><p>Days</p></div>
+        <div class="time-box"><span id="hours">00</span><p>Hours</p></div>
+        <div class="time-box"><span id="minutes">00</span><p>Minutes</p></div>
+        <div class="time-box"><span id="seconds">00</span><p>Seconds</p></div>
+    </div>
+
+    <p class="venue-hint reveal-element reveal-delay-5">Join us for a day filled with love, laughter, and happily ever after.</p>
+</section>
 
         <section id="story" class="section-page">
             <h2>Our Journey of Love</h2>
@@ -363,6 +466,7 @@
             <p>Their romantic journey officially blossomed on <strong>October 15, 2022</strong>. It was a time of innocent youth; Madusha was in his final term of Grade 10, and Gimhani was finishing Grade 7. As they grew up together, their love matured with them.</p>
             <p>Despite facing various challenges and obstacles along the way, their bond remained unbroken and only grew stronger. Now, years later, their love has stood the ultimate test of time. We are overjoyed to announce that they will officially tie the knot on <strong>June 15, 2036</strong>.</p>
         </section>
+        
 
         <section id="location" class="section-page">
             <h2>The Wedding Venue</h2>
@@ -528,6 +632,43 @@ function initScrollReveals() {
 document.addEventListener('DOMContentLoaded', () => {
     initPetals();
     initScrollReveals();
+});
+// =========================================
+// Live Wedding Countdown Logic
+// =========================================
+function initCountdown() {
+    // Set the exact date and time of the wedding
+    const weddingDate = new Date("June 15, 2036 00:00:00").getTime();
+
+    const timer = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = weddingDate - now;
+
+        // Time calculations for days, hours, minutes, and seconds
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Populate the HTML elements, adding a leading zero if the number is under 10
+        document.getElementById("days").innerText = days.toString().padStart(2, '0');
+        document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+        document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+        document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+
+        // What happens when the countdown hits zero
+        if (distance < 0) {
+            clearInterval(timer);
+            document.getElementById("countdown").innerHTML = "<div class='time-box'><span style='font-size: 1.5rem;'>Today is the Big Day!</span></div>";
+        }
+    }, 1000); // Updates every 1 second
+}
+
+// IMPORTANT: Make sure to call initCountdown() inside your DOMContentLoaded event, like this:
+document.addEventListener('DOMContentLoaded', () => {
+    initPetals(); // From previous implementation
+    initScrollReveals(); // From previous implementation
+    initCountdown(); // Start the countdown!
 });
     </script>
 </body>
