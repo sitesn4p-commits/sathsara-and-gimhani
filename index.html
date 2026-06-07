@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madusha & Gimhani | Wedding Invitation</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Premium Color Palette & Variables --- */
+        :root {
+            --bg-ivory: #FFFDF9;
+            --primary-burgundy: #800020;
+            --accent-rosegold: #B76E79;
+            --soft-blush: #FFD1DC;
+            --text-dark: #332A2B;
+            --gold-foil: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            
+            --font-romantic: 'Great Vibes', cursive;
+            --font-headings: 'Playfair Display', serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-ivory);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- SVG Definition (Hidden) --- */
+        .svg-defs { position: absolute; width: 0; height: 0; }
+
+        /* --- 1. Preloader Screen --- */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--bg-ivory);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 99999;
+            transition: opacity 1s ease-in-out, visibility 1s;
+        }
+        .preloader-envelope {
+            position: relative;
+            width: 100px; height: 70px;
+            background: var(--accent-rosegold);
+            border-radius: 5px;
+            display: flex; justify-content: center; align-items: center;
+            animation: float 3s ease-in-out infinite;
+        }
+        .preloader-envelope::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            border-left: 50px solid transparent; border-right: 50px solid transparent; border-top: 35px solid var(--soft-blush);
+        }
+        .preloader-text {
+            margin-top: 30px;
+            font-family: var(--font-romantic);
+            font-size: 2.5rem;
+            color: var(--primary-burgundy);
+        }
+        .enter-btn {
+            margin-top: 25px; padding: 12px 35px;
+            background: var(--primary-burgundy); color: var(--bg-ivory);
+            border: none; border-radius: 30px;
+            font-family: var(--font-body); font-weight: 500; font-size: 1rem;
+            letter-spacing: 2px; text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.3);
+            transition: all 0.4s ease;
+            animation: pulse-glow 2s infinite;
+        }
+        .enter-btn:hover { background: var(--accent-rosegold); transform: scale(1.05); }
+
+        /* --- 2. Live Animations & Petals --- */
+        #petals-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 1; overflow: hidden;
+        }
+        .petal {
+            position: absolute; top: -10%;
+            background: linear-gradient(135deg, rgba(255,182,193,0.8), rgba(255,209,220,0.6));
+            border-radius: 15% 85% 15% 85%;
+            /* Hardware acceleration for smooth mobile performance */
+            will-change: transform;
+        }
+        @keyframes fall {
+            0% { transform: translate3d(0, -10vh, 0) rotate3d(1, 1, 0, 0deg); }
+            100% { transform: translate3d(100px, 110vh, 0) rotate3d(1, 1, 1, 360deg); }
+        }
+
+        /* Continuous Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(183, 110, 121, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(183, 110, 121, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(183, 110, 121, 0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 3. Envelope / Card Opening Transition --- */
+        #transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9000;
+            display: flex; visibility: hidden;
+        }
+        .door {
+            width: 50%; height: 100%;
+            background-color: var(--bg-ivory);
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .door-left {
+            transform: translateX(-100%);
+            border-right: 2px solid var(--accent-rosegold);
+        }
+        .door-right {
+            transform: translateX(100%);
+            border-left: 2px solid var(--accent-rosegold);
+        }
+        .door-left::after, .door-right::after {
+            content: ''; position: absolute; height: 100%; width: 5px; background: var(--gold-foil);
+        }
+        .door-left::after { right: 0; }
+        .door-right::after { left: 0; }
+        
+        /* Active Transition States */
+        #transition-overlay.is-active { visibility: visible; pointer-events: all; }
+        #transition-overlay.is-active .door-left, 
+        #transition-overlay.is-active .door-right { transform: translateX(0); }
+
+        /* --- 4. Navigation & Layout --- */
+        header {
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            background: rgba(255, 253, 249, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(183, 110, 121, 0.2);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-family: var(--font-romantic); font-size: 2.2rem; color: var(--primary-burgundy); }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a {
+            text-decoration: none; color: var(--text-dark); font-weight: 500;
+            font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase;
+            cursor: pointer; transition: color 0.3s; position: relative;
+        }
+        nav a::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -5px; left: 0; background: var(--accent-rosegold); transition: width 0.3s;
+        }
+        nav a:hover { color: var(--primary-burgundy); }
+        nav a:hover::after { width: 100%; }
+
+        .hamburger { display: none; flex-direction: column; cursor: pointer; gap: 6px; }
+        .hamburger div { width: 30px; height: 2px; background: var(--primary-burgundy); transition: 0.3s; }
+
+        main { position: relative; min-height: 100vh; padding-top: 100px; z-index: 10; }
+        .section-page {
+            display: none; min-height: calc(100vh - 100px);
+            padding: 50px 20px; max-width: 800px; margin: 0 auto; text-align: center;
+        }
+        .section-page.active { display: block; animation: fadeUp 1s ease forwards; }
+
+        /* --- Typography & Elements --- */
+        h1 { font-family: var(--font-romantic); font-size: 4.5rem; color: var(--primary-burgundy); line-height: 1; margin: 20px 0; font-weight: normal; }
+        h2 { font-family: var(--font-headings); font-size: 2.5rem; color: var(--accent-rosegold); margin-bottom: 25px; font-weight: 400; font-style: italic; }
+        p { font-size: 1.1rem; line-height: 1.8; margin-bottom: 25px; color: var(--text-dark); font-weight: 300; }
+        strong { font-weight: 500; color: var(--primary-burgundy); }
+
+        /* --- Heart Image Frame (Fixed with Clip-Path & Object-Fit) --- */
+        .heart-wrapper {
+            margin: 40px auto; width: 350px; height: 350px;
+            /* Soft glowing watercolor shadow applied to the wrapper */
+            filter: drop-shadow(0px 15px 25px rgba(183, 110, 121, 0.4));
+            animation: float 6s ease-in-out infinite;
+        }
+        .heart-img {
+            width: 100%; height: 100%;
+            /* Prevents distortion */
+            object-fit: cover;
+            /* Responsive SVG clip path */
+            clip-path: url(#heartClip);
+            -webkit-clip-path: url(#heartClip);
+        }
+
+        /* --- Map & Form Elements --- */
+        .map-container { width: 100%; height: 450px; border-radius: 20px; overflow: hidden; border: 4px solid var(--bg-ivory); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .rsvp-form { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(183, 110, 121, 0.1); text-align: left; position: relative; }
+        .rsvp-form::before {
+            content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border: 1px solid rgba(183, 110, 121, 0.3); border-radius: 25px; pointer-events: none;
+        }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 10px; font-family: var(--font-headings); font-size: 1.2rem; color: var(--primary-burgundy); }
+        input {
+            width: 100%; padding: 15px; border: 1px solid rgba(183, 110, 121, 0.3); border-radius: 10px;
+            font-family: var(--font-body); font-size: 1rem; background: var(--bg-ivory); transition: border-color 0.3s;
+        }
+        input:focus { outline: none; border-color: var(--primary-burgundy); }
+        button[type="submit"] {
+            width: 100%; padding: 18px; background: var(--primary-burgundy); color: #fff;
+            border: none; border-radius: 10px; font-family: var(--font-body); font-size: 1.1rem;
+            letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.4s;
+            animation: pulse-glow 2.5s infinite;
+        }
+        button[type="submit"]:hover { background: var(--accent-rosegold); transform: translateY(-3px); }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 3.5rem; }
+            h2 { font-size: 2rem; }
+            .heart-wrapper { width: 280px; height: 280px; }
+            .hamburger { display: flex; }
+            nav ul {
+                position: absolute; top: 70px; left: -100%; flex-direction: column;
+                background: rgba(255, 253, 249, 0.98); width: 100%; text-align: center;
+                padding: 30px 0; transition: left 0.4s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.05); gap: 20px;
+            }
+            nav ul.nav-active { left: 0; }
+            .rsvp-form { padding: 25px; }
+        }
+        /* =========================================
+   1. Falling Rose Petals (Hardware Accelerated)
+   ========================================= */
+.petal {
+    position: fixed;
+    top: -10%;
+    /* Elegant gradient for realistic petal look */
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.8), rgba(255, 209, 220, 0.6));
+    border-radius: 15% 85% 15% 85%;
+    pointer-events: none;
+    z-index: 1;
+    will-change: transform; /* Tells the browser to optimize this specific animation */
+}
+
+@keyframes fallingPetal {
+    0% { transform: translate3d(0, -10vh, 0) rotate3d(1, 1, 0, 0deg); }
+    100% { transform: translate3d(100px, 110vh, 0) rotate3d(1, 1, 1, 360deg); }
+}
+
+/* =========================================
+   2. Floating Effects (For headings & heart frame)
+   ========================================= */
+.animate-float {
+    animation: floatSmooth 6s ease-in-out infinite;
+}
+
+@keyframes floatSmooth {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* =========================================
+   3. Scroll-Triggered Reveals (Fade & Slide Up)
+   ========================================= */
+.reveal-element {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-element.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Optional cascading delays for multiple elements next to each other */
+.reveal-delay-1 { transition-delay: 0.2s; }
+.reveal-delay-2 { transition-delay: 0.4s; }
+
+/* =========================================
+   4. Glow & Hover Effects (For buttons/links)
+   ========================================= */
+.animate-glow {
+    animation: pulseGlow 2.5s infinite;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.animate-glow:hover {
+    transform: translateY(-3px) scale(1.02);
+    /* Update this color to match your specific primary button color */
+    box-shadow: 0 10px 20px rgba(183, 110, 121, 0.4); 
+}
+
+@keyframes pulseGlow {
+    /* Update the RGBA values below to match your theme color */
+    0% { box-shadow: 0 0 0 0 rgba(183, 110, 121, 0.6); }
+    70% { box-shadow: 0 0 0 15px rgba(183, 110, 121, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(183, 110, 121, 0); }
+}
+    </style>
+</head>
+<body>
+
+    <svg class="svg-defs">
+        <defs>
+            <clipPath id="heartClip" clipPathUnits="objectBoundingBox">
+                <path d="M0.5,1 C 0.5,1 0,0.7 0,0.3 C 0,0.1 0.2,0 0.35,0 C 0.45,0 0.5,0.1 0.5,0.1 C 0.5,0.1 0.55,0 0.65,0 C 0.8,0 1,0.1 1,0.3 C 1,0.7 0.5,1 0.5,1 Z"/>
+            </clipPath>
+        </defs>
+    </svg>
+
+    <audio id="bgm" loop>
+        <source src="wassak-wela-raveen-tharuka.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="preloader">
+        <div class="preloader-envelope"></div>
+        <div class="preloader-text">Loading Love...</div>
+        <button class="enter-btn" onclick="enterSite()">Open Invitation</button>
+    </div>
+
+    <div id="transition-overlay">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+    </div>
+
+    <div id="petals-container"></div>
+
+    <header>
+        <div class="logo">M & G</div>
+        <nav>
+            <ul id="nav-links">
+                <li><a onclick="navigateTo('home')">Home</a></li>
+                <li><a onclick="navigateTo('story')">Our Story</a></li>
+                <li><a onclick="navigateTo('location')">Location</a></li>
+                <li><a onclick="navigateTo('rsvp')">RSVP</a></li>
+            </ul>
+        </nav>
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div><div></div><div></div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="section-page active">
+            <h2>You are Joyfully Invited</h2>
+            
+            <div class="heart-wrapper">
+                <img src="romantic-watercolor-newly-married-couple-600nw-2714415865.webp" alt="Madusha and Gimhani" class="heart-img">
+            </div>
+
+            <h1>Madusha Sathsara<br>&<br>Gimhani Keshika</h1>
+            <p><strong>June 15, 2036</strong> <br> Save the Date</p>
+        </section>
+
+        <section id="story" class="section-page">
+            <h2>Our Journey of Love</h2>
+            <p>Their story began with a spark of magic during the school's World Children’s Day celebration. Amidst the joyful chaos of the day, Gimhani stood out, wearing a beautiful red dress that instantly caught Madusha's eye. That fleeting glance became the foundation of a beautiful connection.</p>
+            <p>Their romantic journey officially blossomed on <strong>October 15, 2022</strong>. It was a time of innocent youth; Madusha was in his final term of Grade 10, and Gimhani was finishing Grade 7. As they grew up together, their love matured with them.</p>
+            <p>Despite facing various challenges and obstacles along the way, their bond remained unbroken and only grew stronger. Now, years later, their love has stood the ultimate test of time. We are overjoyed to announce that they will officially tie the knot on <strong>June 15, 2036</strong>.</p>
+        </section>
+
+        <section id="location" class="section-page">
+            <h2>The Wedding Venue</h2>
+            <p>We can't wait to celebrate this magical day with you. Here is the map to our beautiful venue:</p>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126743.60533590484!2d79.7861642!3d6.9218386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae253d10f7a7003%3A0x320b2e4d32d3838d!2sColombo%2C%20Sri%20Lanka!5e0!3m2!1sen!2sus!4v1680000000000!5m2!1sen!2sus" 
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </section>
+
+        <section id="rsvp" class="section-page">
+            <h2>RSVP</h2>
+            <p>Please kindly confirm your attendance so we can prepare for your arrival.</p>
+            <div class="rsvp-form">
+                <form action="https://formspree.io/f/mbdegyzn" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name of the Head of the Household</label>
+                        <input type="text" id="name" name="Head_of_Household" placeholder="Enter full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guests">Number of Guests Attending</label>
+                        <input type="number" id="guests" name="Number_of_Guests" min="0" max="20" placeholder="E.g., 2" required>
+                    </div>
+                    <button type="submit">Confirm Attendance</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 1. Enter Site & Audio Logic ---
+        function enterSite() {
+            const preloader = document.getElementById('preloader');
+            const bgm = document.getElementById('bgm');
+            
+            bgm.play().catch(e => console.log("Audio prevented:", e));
+            
+            preloader.style.opacity = '0';
+            setTimeout(() => { preloader.style.visibility = 'hidden'; }, 1000);
+            
+            // Start petals after preloader vanishes to save resources initially
+            setInterval(createPetal, 400);
+        }
+
+        // --- 2. Smooth Falling Petals (Hardware Accelerated) ---
+        const petalContainer = document.getElementById('petals-container');
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            
+            // Randomize size and position
+            const size = Math.random() * 12 + 10;
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${Math.random() * 100}vw`;
+            
+            // Randomize duration and delay
+            const fallDuration = Math.random() * 6 + 7; // 7s to 13s
+            petal.style.animation = `fall ${fallDuration}s linear forwards`;
+            
+            petalContainer.appendChild(petal);
+            
+            // Clean up DOM
+            setTimeout(() => { petal.remove(); }, fallDuration * 1000);
+        }
+
+        // --- 3. Card Opening Transition & Navigation Logic ---
+        function navigateTo(sectionId) {
+            const overlay = document.getElementById('transition-overlay');
+            const sections = document.querySelectorAll('.section-page');
+            const targetSection = document.getElementById(sectionId);
+            const navLinks = document.getElementById('nav-links');
+            
+            // Auto-close hamburger on mobile
+            if (navLinks.classList.contains('nav-active')) {
+                navLinks.classList.remove('nav-active');
+            }
+
+            // Step 1: Close the envelope doors
+            overlay.classList.add('is-active');
+
+            // Step 2: Swap content while doors are closed (after 800ms transition time)
+            setTimeout(() => {
+                sections.forEach(sec => sec.classList.remove('active'));
+                targetSection.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                
+                // Step 3: Open the envelope doors to reveal new content
+                overlay.classList.remove('is-active');
+            }, 800);
+        }
+
+        // --- 4. Hamburger Menu Logic ---
+        function toggleMenu() {
+            document.getElementById('nav-links').classList.toggle('nav-active');
+        }
+        // =========================================
+// 1. Falling Petals Generator
+// =========================================
+function initPetals() {
+    // Ensure you have <div id="petals-container"></div> just inside your <body>
+    const petalContainer = document.getElementById('petals-container');
+    if (!petalContainer) return;
+
+    function createPetal() {
+        const petal = document.createElement('div');
+        petal.classList.add('petal');
+        
+        // Randomize size, starting position, and speed for a natural, organic look
+        const size = Math.random() * 12 + 10; // 10px to 22px
+        const startLeft = Math.random() * 100; // 0vw to 100vw
+        const fallDuration = Math.random() * 6 + 7; // 7s to 13s
+        
+        petal.style.width = `${size}px`;
+        petal.style.height = `${size}px`;
+        petal.style.left = `${startLeft}vw`;
+        petal.style.animation = `fallingPetal ${fallDuration}s linear forwards`;
+        
+        petalContainer.appendChild(petal);
+        
+        // Remove from DOM exactly when animation ends to prevent memory lag
+        setTimeout(() => {
+            petal.remove();
+        }, fallDuration * 1000);
+    }
+
+    // Spawn a new petal every 400ms
+    setInterval(createPetal, 400);
+}
+
+// =========================================
+// 2. Scroll-Triggered Reveal Logic (Intersection Observer)
+// =========================================
+function initScrollReveals() {
+    const revealElements = document.querySelectorAll('.reveal-element');
+    
+    // Performance-friendly native browser API for detecting scroll visibility
+    const observerOptions = {
+        root: null, // Uses the viewport
+        rootMargin: '0px',
+        threshold: 0.15 // Triggers when 15% of the element comes into view
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                // Optional: Stop observing once revealed so it doesn't animate again when scrolling up
+                // observer.unobserve(entry.target); 
+            } else {
+                // Remove this else block if you ONLY want it to animate once
+                entry.target.classList.remove('is-visible');
+            }
+        });
+    }, observerOptions);
+
+    revealElements.forEach(el => observer.observe(el));
+}
+
+// Initialize all animations safely once the HTML is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initPetals();
+    initScrollReveals();
+});
+    </script>
+</body>
+</html>
